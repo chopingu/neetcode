@@ -12,12 +12,19 @@
 
 class Solution {
 public:
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(root->val > max(p->val, q->val))
-            return lowestCommonAncestor(root->left, p, q);
-        else if(root->val < min(p->val, q->val))
-            return lowestCommonAncestor(root->right, p, q);
-        
-        return root;
+    int goodNodes(TreeNode* root) {
+        int cnt = 0;
+        auto dfs = [&](TreeNode *u, int mx, auto&& dfs) -> void {
+            if(!u) 
+                return;
+            
+            cnt += (u->val >= mx);
+            dfs(u->left, max(mx, u->val), dfs);
+            dfs(u->right, max(mx, u->val), dfs);
+        };
+
+        dfs(root, -101, dfs);
+
+        return cnt;
     }
 };
